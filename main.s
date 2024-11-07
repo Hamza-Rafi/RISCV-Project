@@ -41,10 +41,12 @@ _start:
 	and t3, t1, t2
 	sw t3, GPIO_OUTPUT_VAL(t0)
 
+# THIS CODE IS FOR DEBUGGING PURPOSES.
+# WILL NOT INCLUDE WHEN RUNNING THE TESTS
+# ---------------------------------
 	la a0, text
 	jal print_string
 
-# ---------------------
 print_string:
 	li t0, UART_BASE
 print_char:
@@ -60,9 +62,10 @@ wait:
 
 end_print:
 	ret
-# ---------------------------------
+
 .section .rodata
 high: .string "high\r\n"
 low: .string "low\r\n"
 text:
 	.string "finish\r\n"
+# ---------------------------------
