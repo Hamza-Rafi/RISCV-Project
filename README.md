@@ -7,6 +7,8 @@
 
 # 
 - Check 202411112.csv for a trace from `main.s` running on the board.
+- Channel A is the probe connected to the GPIO pin.
+- Channel B is connected to one of the chip's power pins through a 10 Ohm resistor.
 
 
 ## TODO
