@@ -12,16 +12,14 @@
 _start:
 
 # t0 holds GPIO structure address
-la t0, GPIO_BASE
+la s0, GPIO_BASE
 
-# t1 holds the bitmask for pin
-li t1, PIN1
-li t2, 1
-sll t1, t2, t1
+# create pin bitmask
+# stored in s1
+li t0, PIN1
+slli s1, t0, 1
 
 # set pin as output
-# these can be overwritten
-lw t2, GPIO_OUTPUT_EN(t0)
-or t3, t1, t2
-sw t3, GPIO_OUTPUT_EN(t0)
-
+lw t0, GPIO_OUTPUT_EN(s0)
+or t1, t0, s1
+sw t1, GPIO_OUTPUT_EN(s0)

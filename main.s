@@ -6,57 +6,59 @@
 .equ GPIO_OUTPUT_EN,  0x08
 .equ GPIO_OUTPUT_VAL, 0x0c
 
-#.equ PIN7, 1 # pin no and gpio no are different
 .equ PIN1, 1
 
 _start:
-	la t0, GPIO_BASE
+la s0, GPIO_BASE
 
-	# crete bitmask for pin 
-	# bitmask stored in t1
-	li t1, PIN1
-	li t2, 1
-	sll t1, t2, t1
+# create pin bitmask
+# stored in s1
+li t0, PIN1
+slli s1, t0, 1
 
-	# set pin as output
-	lw t2, GPIO_OUTPUT_EN(t0)
-	or t3, t1, t2
-	sw t3, GPIO_OUTPUT_EN(t0)
+# set pin as output
+sw s1, GPIO_OUTPUT_EN(s0)
 
-	# prerequisite for instruction
-	li t4, 5
-	li t5, 6
+# inst prerequisite
+li t0, 1
+li t1, 2
 
-	# set pin high
-	lw t2, GPIO_OUTPUT_VAL(t0)
-	or t3, t1, t2
-	sw t3, GPIO_OUTPUT_VAL(t0)
+# loop n times
+li s2, 100
+loop:
 
-	# run instruction
-	add t4, t4, t5
-	
-	# set pin low
-	not t1, t1
-	lw t2, GPIO_OUTPUT_VAL(t0)
-	and t3, t1, t2
-	sw t3, GPIO_OUTPUT_VAL(t0)
+# set pin high
+sw s1, GPIO_OUTPUT_VAL(s0)
 
-# THIS CODE IS FOR DEBUGGING PURPOSES.
-# WILL NOT INCLUDE WHEN RUNNING THE TESTS
-# ---------------------------------
-	la a0, text
-	jal print_string
+add t3, t0, t1
 
-print_string:
-	li t0, UART_BASE
+# set pin low
+li t0, 0x0
+sw t0, GPIO_OUTPUT_VAL(s0)
+
+# print
+la a0, h
+jal print_char
+
+
+# decrease loop counter
+addi s2, s2, -1
+bnez s2, loop
+
+
+halt: j halt
+
+
+
 print_char:
+	li t5, UART_BASE
 	lb a1, (a0)
 	beqz a1, end_print
 wait:
-	lw t1, (t0)
-	bltz t1, wait
+	lw t6, (t5)
+	bltz t6, wait
 
-	sw a1, (t0)
+	sw a1, (t5)
 	addi a0, a0, 1
 	j print_char
 
@@ -64,8 +66,4 @@ end_print:
 	ret
 
 .section .rodata
-high: .string "high\r\n"
-low: .string "low\r\n"
-text:
-	.string "finish\r\n"
-# ---------------------------------
+h: .string "h"
