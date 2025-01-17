@@ -11,7 +11,7 @@
 
 _start:
 
-# t0 holds GPIO structure address
+# s0 holds GPIO structure address
 la s0, GPIO_BASE
 
 # create pin bitmask
@@ -20,6 +20,4 @@ li t0, PIN1
 slli s1, t0, 1
 
 # set pin as output
-lw t0, GPIO_OUTPUT_EN(s0)
-or t1, t0, s1
-sw t1, GPIO_OUTPUT_EN(s0)
+sw s1, GPIO_OUTPUT_EN(s0)
